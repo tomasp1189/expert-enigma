@@ -60,10 +60,25 @@
     { "directory": "packages/commands", "changeProcessCWD": true }
   ],
   "solidity.packageDefaultDependenciesDirectory": "packages/solidity-ts/node_modules",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "solidity.formatter": "prettier", // This is the default so it might be missing.
   "[solidity]": {
     "editor.defaultFormatter": "NomicFoundation.hardhat-solidity"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "solidity.defaultCompiler": "localNodeModule",
   "mochaExplorer.configFile": "./packages/solidity-ts/.mocharc.json"

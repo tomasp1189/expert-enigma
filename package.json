@@ -116,7 +116,7 @@
       "yarn workspace @scaffold-eth/solidity format"
     ],
     "packages/solidity-ts/**/*.sol": [
-      "yarn workspace @scaffold-eth/solidity format",
+
       "yarn workspace @scaffold-eth/solidity solhint --fix"
     ]
   },

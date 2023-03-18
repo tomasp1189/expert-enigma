@@ -7,26 +7,30 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
+import "./interfaces/IMetadataFactory.sol";
 
 //learn more: https://docs.openzeppelin.com/contracts/3.x/erc721
 
 // GET LISTED ON OPENSEA: https://testnets.opensea.io/get-listed/step-two
 
-contract YourNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
+contract SlothNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
+  using Strings for uint256;
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
-  constructor() ERC721("YourNFT", "YNFT") {}
+  IMetadataFactory public metadataFactory;
+
+  constructor(address metadataFactoryAddress) ERC721("Sloth NFT", "SLNFT") {
+    metadataFactory = IMetadataFactory(metadataFactoryAddress);
+  }
 
   function _baseURI() internal view virtual override returns (string memory) {
     return "https://ipfs.io/ipfs/";
   }
 
-  function _beforeTokenTransfer(
-    address from,
-    address to,
-    uint256 tokenId
-  ) internal override(ERC721, ERC721Enumerable) {
+  function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable) {
     super._beforeTokenTransfer(from, to, tokenId);
   }
 
@@ -43,13 +47,24 @@ contract YourNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     return super.tokenURI(tokenId);
   }
 
-  function mintItem(address to, string memory tokenURI) public returns (uint256) {
+  function mintItem(address to, string memory _tokenURI) public returns (uint256) {
     _tokenIds.increment();
 
     uint256 id = _tokenIds.current();
     _mint(to, id);
-    _setTokenURI(id, tokenURI);
+    _setTokenURI(id, _tokenURI);
 
     return id;
+  }
+
+  function mintRandomSloth(address to) public onlyOwner {
+    _tokenIds.increment();
+    uint256 tokenId = _tokenIds.current();
+
+    // You'll need to implement a function to create the tokenURI based on the attributes
+    string memory _tokenURI = metadataFactory.createTokenURI(tokenId);
+
+    _safeMint(to, tokenId);
+    _setTokenURI(tokenId, _tokenURI);
   }
 }
