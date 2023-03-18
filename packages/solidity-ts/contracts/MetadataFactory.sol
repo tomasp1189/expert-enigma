@@ -4,6 +4,7 @@ pragma solidity >=0.8.0 <0.9.0;
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "./interfaces/IMetadataFactory.sol";
+import "./interfaces/IMetadataStorage.sol";
 
 contract MetadataFactory is IMetadataFactory {
   using Strings for uint256;
@@ -116,20 +117,6 @@ contract MetadataFactory is IMetadataFactory {
   string[] private accessories = ["Sunglasses", "Scarf", "Hat", "Necklace", "Bowtie", "Earrings"];
   string[] private energyLevels = ["Low", "Medium", "High", "Hyper"];
 
-  struct Attributes {
-    string color;
-    string pattern;
-    string eyeColor;
-    string accessory;
-    string energyLevel;
-  }
-
-  struct Stats {
-    uint256 strength;
-    uint256 agility;
-    uint256 intelligence;
-  }
-
   function generateRandomNumber(uint256 tokenId, uint256 modulus) internal view returns (uint256) {
     return uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, tokenId))) % modulus;
   }
@@ -143,14 +130,24 @@ contract MetadataFactory is IMetadataFactory {
     return cdf.length - 1;
   }
 
-  function generateAttribute(string[] storage attributeList, uint256 mean, uint256 stddev, uint256 tokenId) internal view returns (string memory) {
+  function generateAttribute(
+    string[] storage attributeList,
+    uint256 mean,
+    uint256 stddev,
+    uint256 tokenId
+  ) internal view returns (string memory) {
     uint256 randomNumber = generateRandomNumber(tokenId, 100);
     uint256 index = ((inverseCDF(randomNumber) * stddev) / 100) + mean;
     index = index % attributeList.length;
     return attributeList[index];
   }
 
-  function _encode3bytes(bytes memory source, bytes memory result, uint256 i, uint256 j) internal pure returns (uint256) {
+  function _encode3bytes(
+    bytes memory source,
+    bytes memory result,
+    uint256 i,
+    uint256 j
+  ) internal pure returns (uint256) {
     bytes memory table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     uint256 a = uint8(source[i]);
     uint256 b = uint8(source[i + 1]);
@@ -164,7 +161,12 @@ contract MetadataFactory is IMetadataFactory {
     return j;
   }
 
-  function _encode2bytes(bytes memory source, bytes memory result, uint256 i, uint256 j) internal pure returns (uint256) {
+  function _encode2bytes(
+    bytes memory source,
+    bytes memory result,
+    uint256 i,
+    uint256 j
+  ) internal pure returns (uint256) {
     bytes memory table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     uint256 a = uint8(source[i]);
     uint256 b = i + 1 < source.length ? uint8(source[i + 1]) : 0;
@@ -228,40 +230,42 @@ contract MetadataFactory is IMetadataFactory {
     return stats;
   }
 
-  function createTokenURI(uint256 tokenId) external view returns (string memory) {
+  function createTokenMetadata(uint256 tokenId) external view returns (string memory, TokenMetadata memory metadata) {
     Attributes memory attributes = getAttributes(tokenId);
     Stats memory stats = getStats(tokenId);
 
-    string memory _tokenURI = _createTokenURI(attributes, stats);
+    string memory _tokenURI = _createTokenMetadata(attributes, stats);
 
-    return _tokenURI;
+    return (_tokenURI, TokenMetadata({ name: "Sloth NFT", description: "A cute sloth NFT with unique attributes", attributes: attributes, stats: stats }));
   }
 
   function _composeJson(Attributes memory attributes, Stats memory stats) internal pure returns (string memory) {
-      return string(
-          abi.encodePacked(
-              "{\"name\": \"Sloth NFT\", \"description\": \"A cute sloth NFT with unique attributes\", \"attributes\": [",
-              _attributeJson("Color", attributes.color),
-              _attributeJson("Pattern", attributes.pattern),
-              _attributeJson("Eye Color", attributes.eyeColor),
-              _attributeJson("Accessory", attributes.accessory),
-              _attributeJson("Energy Level", attributes.energyLevel),
-              _statJson("Strength", stats.strength),
-              _statJson("Agility", stats.agility),
-              _statJson("Intelligence", stats.intelligence),
-              "]}")
+    return
+      string(
+        abi.encodePacked(
+          '{"name": "Sloth NFT", "description": "A cute sloth NFT with unique attributes", "attributes": [',
+          _attributeJson("Color", attributes.color),
+          _attributeJson("Pattern", attributes.pattern),
+          _attributeJson("Eye Color", attributes.eyeColor),
+          _attributeJson("Accessory", attributes.accessory),
+          _attributeJson("Energy Level", attributes.energyLevel),
+          _statJson("Strength", stats.strength),
+          _statJson("Agility", stats.agility),
+          _statJson("Intelligence", stats.intelligence),
+          "]}"
+        )
       );
   }
 
-    function _attributeJson(string memory traitType, string memory value) internal pure returns (string memory) {
-      return string(abi.encodePacked("{\"trait_type\": \"", traitType, "\", \"value\": \"", value, "\"}, "));
+  function _attributeJson(string memory traitType, string memory value) internal pure returns (string memory) {
+    return string(abi.encodePacked('{"trait_type": "', traitType, '", "value": "', value, '"}, '));
   }
 
   function _statJson(string memory traitType, uint256 value) internal pure returns (string memory) {
-      return string(abi.encodePacked("{\"trait_type\": \"", traitType, "\", \"value\": ", value.toString(), "}, "));
+    return string(abi.encodePacked('{"trait_type": "', traitType, '", "value": ', value.toString(), "}, "));
   }
 
-  function _createTokenURI(Attributes memory attributes, Stats memory stats) internal pure returns (string memory) {
+  function _createTokenMetadata(Attributes memory attributes, Stats memory stats) internal pure returns (string memory) {
     string memory json = _composeJson(attributes, stats);
     string memory base64Json = base64Encode(json);
     string memory _tokenURI = string(abi.encodePacked("data:application/json;base64,", base64Json));

@@ -2,7 +2,7 @@ import '~helpers/hardhat-imports';
 import '~tests/utils/chai-imports';
 
 import { expect } from 'chai';
-import { YourNFT__factory, YourNFT } from 'generated/contract-types';
+import { SlothNFT__factory, SlothNFT, MetadataFactory, MetadataFactory__factory, MetadataStorage, MetadataStorage__factory } from 'generated/contract-types';
 import hre from 'hardhat';
 
 import { getHardhatSigners } from '~helpers/functions/accounts';
@@ -12,13 +12,19 @@ describe('🚩 Challenge 0: 🎟 Simple NFT Example 🤓', function () {
 
   // console.log("hre:",Object.keys(hre)) // <-- you can access the hardhat runtime env here
 
-  describe('YourNFT', function () {
-    let yourNFTContract: YourNFT;
+  describe('slothNFT', function () {
+    let slothNFTContract: SlothNFT;
+    let metadataFactoryContract: MetadataFactory;
+    let metadataStorageContract: MetadataStorage;
 
     before(async () => {
       const { deployer } = await getHardhatSigners(hre);
-      const factory = new YourNFT__factory(deployer);
-      yourNFTContract = await factory.deploy();
+      const metadataStorageFactory = new MetadataStorage__factory(deployer);
+      metadataStorageContract = await metadataStorageFactory.deploy();
+      const metadataFactoryFactory = new MetadataFactory__factory(deployer);
+      metadataFactoryContract = await metadataFactoryFactory.deploy();
+      const factory = new SlothNFT__factory(deployer);
+      slothNFTContract = await factory.deploy(metadataFactoryContract.address, metadataStorageContract.address);
     });
 
     beforeEach(async () => {
@@ -31,19 +37,22 @@ describe('🚩 Challenge 0: 🎟 Simple NFT Example 🤓', function () {
 
         console.log('\t', ' 🧑‍🏫 Tester Address: ', user1.address);
 
-        const startingBalance = await yourNFTContract.balanceOf(user1.address);
+        const startingBalance = await slothNFTContract.balanceOf(user1.address);
         console.log('\t', ' ⚖️ Starting balance: ', startingBalance.toNumber());
 
         console.log('\t', ' 🔨 Minting...');
-        const mintResult = await yourNFTContract.mintItem(user1.address, 'QmfVMAmNM1kDEBYrC2TPzQDoCRFH6F5tE1e9Mr4FkkR5Xr');
+        const mintResult = await slothNFTContract.mintRandomSloth(user1.address);
         console.log('\t', ' 🏷  mint tx: ', mintResult.hash);
 
         console.log('\t', ' ⏳ Waiting for confirmation...');
         const txResult = await mintResult.wait(1);
         expect(txResult.status).to.equal(1);
 
+        console.log('tokenURI:', await slothNFTContract.tokenURI(1));
+        console.log('tokenMetadata:', await slothNFTContract.tokenMetadata(1));
+
         console.log('\t', ' 🔎 Checking new balance: ', startingBalance.toNumber());
-        expect(await yourNFTContract.balanceOf(user1.address)).to.equal(startingBalance.add(1));
+        expect(await slothNFTContract.balanceOf(user1.address)).to.equal(startingBalance.add(1));
       });
     });
   });

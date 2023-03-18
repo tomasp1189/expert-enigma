@@ -10,6 +10,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "./interfaces/IMetadataFactory.sol";
+import "./interfaces/IMetadataStorage.sol";
 
 //learn more: https://docs.openzeppelin.com/contracts/3.x/erc721
 
@@ -21,16 +22,22 @@ contract SlothNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   Counters.Counter private _tokenIds;
 
   IMetadataFactory public metadataFactory;
+  IMetadataStorage public metadataStorage;
 
-  constructor(address metadataFactoryAddress) ERC721("Sloth NFT", "SLNFT") {
+  constructor(address metadataFactoryAddress, address metadataStorageAddress) ERC721("Sloth NFT", "SLNFT") {
     metadataFactory = IMetadataFactory(metadataFactoryAddress);
+    metadataStorage = IMetadataStorage(metadataStorageAddress);
   }
 
   function _baseURI() internal view virtual override returns (string memory) {
-    return "https://ipfs.io/ipfs/";
+    return "";
   }
 
-  function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable) {
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 tokenId
+  ) internal override(ERC721, ERC721Enumerable) {
     super._beforeTokenTransfer(from, to, tokenId);
   }
 
@@ -43,8 +50,17 @@ contract SlothNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
   }
 
   function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+    require(_exists(tokenId), "URI query for nonexistent token");
+
     // DO SOMETHING
     return super.tokenURI(tokenId);
+  }
+
+  function tokenMetadata(uint256 tokenId) public view returns (TokenMetadata memory) {
+    // require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+    // DO SOMETHING
+    return metadataStorage.getTokenMetadata(tokenId);
   }
 
   function mintItem(address to, string memory _tokenURI) public returns (uint256) {
@@ -62,9 +78,12 @@ contract SlothNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     uint256 tokenId = _tokenIds.current();
 
     // You'll need to implement a function to create the tokenURI based on the attributes
-    string memory _tokenURI = metadataFactory.createTokenURI(tokenId);
+    string memory _tokenURI;
+    TokenMetadata memory _tokenMetadata;
+    (_tokenURI, _tokenMetadata) = metadataFactory.createTokenMetadata(tokenId);
 
     _safeMint(to, tokenId);
+    metadataStorage.setTokenMetadata(tokenId, _tokenMetadata);
     _setTokenURI(tokenId, _tokenURI);
   }
 }
