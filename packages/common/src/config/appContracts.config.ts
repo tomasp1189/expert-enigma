@@ -46,16 +46,40 @@ export const appContractsConfig = () => {
               foundryDeployedContractsJson
             ),
 
-      YourNFT:
+      SlothNFT:
         scaffoldConfig.build.solidityToolkit === 'hardhat'
           ? createConnectorForHardhatContract(
-              'YourNFT',
-              toolkitContracts.YourNFT__factory,
+              'SlothNFT',
+              toolkitContracts.SlothNFT__factory,
               hardhatDeployedContractsJson
             )
           : createConnectorForFoundryContract(
-              'YourNFT',
-              toolkitContracts.YourNFT__factory,
+              'SlothNFT',
+              toolkitContracts.SlothNFT__factory,
+              foundryDeployedContractsJson
+            ),
+      MetadataStorage:
+        scaffoldConfig.build.solidityToolkit === 'hardhat'
+          ? createConnectorForHardhatContract(
+              'MetadataStorage',
+              toolkitContracts.MetadataStorage__factory,
+              hardhatDeployedContractsJson
+            )
+          : createConnectorForFoundryContract(
+              'MetadataStorage',
+              toolkitContracts.MetadataStorage__factory,
+              foundryDeployedContractsJson
+            ),
+      MetadataFactory:
+        scaffoldConfig.build.solidityToolkit === 'hardhat'
+          ? createConnectorForHardhatContract(
+              'MetadataFactory',
+              toolkitContracts.MetadataFactory__factory,
+              hardhatDeployedContractsJson
+            )
+          : createConnectorForFoundryContract(
+              'MetadataFactory',
+              toolkitContracts.MetadataFactory__factory,
               foundryDeployedContractsJson
             ),
 
