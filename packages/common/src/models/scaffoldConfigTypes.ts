@@ -1,5 +1,6 @@
 export const NetworkNamesList = [
   'localhost',
+  'buildBear',
   'mainnet',
   'kovan',
   'rinkeby',

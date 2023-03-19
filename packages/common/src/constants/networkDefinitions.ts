@@ -21,6 +21,13 @@ export const networkDefinitions: Record<TNetworkNamesList, TNetworkDefinition> =
     blockExplorer: '',
     rpcUrl: 'http://' + hostname + ':8545',
   },
+  buildBear: {
+    name: 'buildBear',
+    color: '#964B00',
+    chainId: 8529,
+    blockExplorer: '',
+    rpcUrl: 'https://rpc.buildbear.io/Boring_Rugor_Nass_90b2108e',
+  },
   mainnet: {
     name: 'mainnet',
     color: '#ff8b9e',

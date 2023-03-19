@@ -1841,6 +1841,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mui-image@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@types/mui-image@npm:1.0.1"
+  dependencies:
+    "@types/react": "*"
+  checksum: e5caf4e8e4fe9d008faa906098556a5d018fb33e40e1ef124f94ad95bd9933e4c7c356b462e0432de9813887f3604c3e0a43b680becffbbd83e35fb96ff14b7b
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 18.15.3
   resolution: "@types/node@npm:18.15.3"
@@ -3795,10 +3804,12 @@ __metadata:
     "@emotion/styled": ^11.10.6
     "@mui/material": ^5.11.13
     "@rainbow-me/rainbowkit": ^0.12.1
+    "@types/mui-image": ^1.0.1
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     "@vitejs/plugin-react": ^3.1.0
     ethers: <6
+    mui-image: ^1.0.7
     react: ^18.2.0
     react-dom: ^18.2.0
     typescript: ^4.9.3
@@ -4811,6 +4822,19 @@ __metadata:
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
   checksum: aa92de608021b242401676e35cfa5aa42dd70cbdc082b916da7fb925c542173e36bce97ea3e804923fe92c0ad991434e4a38327e15a1b5b5f945d66df615ae6d
+  languageName: node
+  linkType: hard
+
+"mui-image@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "mui-image@npm:1.0.7"
+  peerDependencies:
+    "@emotion/react": ^11.4.1
+    "@emotion/styled": ^11.3.0
+    "@mui/material": ^5.0.1
+    prop-types: ^15.7.2
+    react: ^17.0.2 || ^18.0.0
+  checksum: 7512777d0a83a108a9403f4175874f07d65a31282d33e4cb8334af8242ae5827c478b73cd7adce727a75a73c8ca76f236781881f74e6c303e81e1bfcca232512
   languageName: node
   linkType: hard
 

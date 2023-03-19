@@ -1,45 +1,43 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import './App.css';
-import { Box, Button } from '@mui/material';
+import { createContext, useContext, useState } from 'react';
+import { Container, Box, Typography } from '@mui/material';
+import { MintModal } from './components/MintModal';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
+import { Store } from './providers/Store';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const { address } = useAccount();
+  const { chain } = useNetwork();
+  const {data: signer } = useSigner();
+  const provider = useProvider();
+
+
+  const userStore = {
+    address,
+    chain,
+    signer,
+    provider,
+  };
 
   return (
-    <Box className="App" sx={{
-      border: `1px solid red`
-    }}>
-      <ConnectButton />
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React + + Typescript + MUI 5</h1>
-      <Button color="secondary">Secondary</Button>
-      <Button variant="contained" color="success">
-        Success
-      </Button>
-      <Button variant="outlined" color="error">
-        Error
-      </Button>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </Box>
+    <Store.Provider value={{userStore}}>
+      <Container sx={{
+                backgroundImage: 'url("map.webp")',
+                height: '100vh',
+      }} >
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'end',
+          width: '100%',
+          pt: 4,
+          pr: 4,
+        }}>
+        <ConnectButton />
+        </Box>
+          <MintModal />
+      </Container>
+      </Store.Provider>
+
   );
 }
 

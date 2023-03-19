@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import './index.css'
 import '@rainbow-me/rainbowkit/styles.css';
 import {
   getDefaultWallets,
@@ -31,8 +30,34 @@ const localChain: Chain = {
   },
 };
 
+const buildBearChain: Chain = {
+  id: 8529,
+  name: 'BuildBear',
+  network: 'buildbear',
+  nativeCurrency: {
+      name: 'Ether',
+      symbol: 'BB ETH',
+      decimals: 18,
+  },
+  rpcUrls: { default: { http: ['https://rpc.buildbear.io/Boring_Rugor_Nass_90b2108e'], webSocket: [''] },
+  public: { http: ['https://rpc.buildbear.io/Boring_Rugor_Nass_90b2108e'], webSocket: [''] },
+  },
+  blockExplorers: {
+      default: {
+        name: 'BuildBear',
+        url: 'https://explorer.buildbear.io/Boring_Rugor_Nass_90b2108e'
+      },
+      public: {
+        name: 'BuildBear',
+        url: 'https://explorer.buildbear.io/Boring_Rugor_Nass_90b2108e'
+      },
+  },
+
+};
+
+
 const { chains, provider } = configureChains(
-  [localChain],
+  [localChain, buildBearChain],
   [publicProvider()]
 );
 
@@ -46,7 +71,6 @@ const wagmiClient = createClient({
   connectors,
   provider
 })
-
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

@@ -60,6 +60,12 @@ const networks = {
     //   mnemonic: getMnemonic(),
     // },
   },
+  buildBear: {
+    url: 'https://rpc.buildbear.io/Boring_Rugor_Nass_90b2108e',
+    accounts: {
+      mnemonic: 'wonder inflict share wink arrow guide popular coil sustain wild swallow huge',
+    },
+  },
 };
 
 /**
