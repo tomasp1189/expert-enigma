@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import {
-  createConnectorForExternalAbi,
   createConnectorForExternalContract,
   createConnectorForFoundryContract,
   createConnectorForHardhatContract,
@@ -33,19 +32,30 @@ export const appContractsConfig = () => {
       // --------------------------------------------------
       // 🙋🏽‍♂️ Contracts examples either using hardhat or foundry
       // --------------------------------------------------
-      YourContract:
+      SlothFarming:
         scaffoldConfig.build.solidityToolkit === 'hardhat'
           ? createConnectorForHardhatContract(
-              'YourContract',
-              toolkitContracts.YourContract__factory,
+              'SlothFarming',
+              toolkitContracts.SlothFarming__factory,
               hardhatDeployedContractsJson
             )
           : createConnectorForFoundryContract(
-              'YourContract',
-              toolkitContracts.YourContract__factory,
+              'SlothFarming',
+              toolkitContracts.SlothFarming__factory,
               foundryDeployedContractsJson
             ),
-
+      SlothToken:
+        scaffoldConfig.build.solidityToolkit === 'hardhat'
+          ? createConnectorForHardhatContract(
+              'SlothToken',
+              toolkitContracts.SlothToken__factory,
+              hardhatDeployedContractsJson
+            )
+          : createConnectorForFoundryContract(
+              'SlothToken',
+              toolkitContracts.SlothToken__factory,
+              foundryDeployedContractsJson
+            ),
       SlothNFT:
         scaffoldConfig.build.solidityToolkit === 'hardhat'
           ? createConnectorForHardhatContract(
@@ -91,16 +101,16 @@ export const appContractsConfig = () => {
       // --------------------------------------------------
       // 🙋🏽‍♂️ Add your external abi here (unverified contracts)`
       // --------------------------------------------------
-      YourContractFromAbi: createConnectorForExternalAbi(
-        'YourContract',
-        {
-          [1235]: {
-            address: 'xxx',
-          },
-        },
-        toolkitContracts.YourContract__factory.abi
-        // optional if you have a connect function:  externalContracts.YourContract__factory.connect
-      ),
+      // YourContractFromAbi: createConnectorForExternalAbi(
+      //   'YourContract',
+      //   {
+      //     [1235]: {
+      //       address: 'xxx',
+      //     },
+      //   },
+      //   toolkitContracts.YourContract__factory.abi
+      //   // optional if you have a connect function:  externalContracts.YourContract__factory.connect
+      // ),
     } as const;
 
     return result;
