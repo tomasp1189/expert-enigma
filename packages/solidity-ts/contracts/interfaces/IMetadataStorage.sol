@@ -24,5 +24,9 @@ struct TokenMetadata {
 interface IMetadataStorage {
   function getTokenMetadata(uint256 tokenId) external view returns (TokenMetadata memory);
 
+  function getTokenAttributes(uint256 tokenId) external view returns (Attributes memory);
+
+  function getTokenStats(uint256 tokenId) external view returns (Stats memory);
+
   function setTokenMetadata(uint256 tokenId, TokenMetadata memory metadata) external returns (bool);
 }

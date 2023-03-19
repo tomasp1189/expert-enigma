@@ -48,8 +48,8 @@ describe('🚩 Challenge 0: 🎟 Simple NFT Example 🤓', function () {
         const txResult = await mintResult.wait(1);
         expect(txResult.status).to.equal(1);
 
-        console.log('tokenURI:', await slothNFTContract.tokenURI(1));
-        console.log('tokenMetadata:', await slothNFTContract.tokenMetadata(1));
+        console.log('\t', 'tokenURI:', await slothNFTContract.tokenURI(1));
+        console.log('\t', 'tokenMetadata:', await slothNFTContract.tokenMetadata(1));
 
         console.log('\t', ' 🔎 Checking new balance: ', startingBalance.toNumber());
         expect(await slothNFTContract.balanceOf(user1.address)).to.equal(startingBalance.add(1));

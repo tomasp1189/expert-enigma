@@ -80,7 +80,7 @@ contract SlothNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     // You'll need to implement a function to create the tokenURI based on the attributes
     string memory _tokenURI;
     TokenMetadata memory _tokenMetadata;
-    (_tokenURI, _tokenMetadata) = metadataFactory.createTokenMetadata(tokenId);
+    (_tokenURI, _tokenMetadata) = metadataFactory.createTokenMetadata(tokenId, to);
 
     _safeMint(to, tokenId);
     metadataStorage.setTokenMetadata(tokenId, _tokenMetadata);

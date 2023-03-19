@@ -117,8 +117,27 @@ contract MetadataFactory is IMetadataFactory {
   string[] private accessories = ["Sunglasses", "Scarf", "Hat", "Necklace", "Bowtie", "Earrings"];
   string[] private energyLevels = ["Low", "Medium", "High", "Hyper"];
 
-  function generateRandomNumber(uint256 tokenId, uint256 modulus) internal view returns (uint256) {
-    return uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, tokenId))) % modulus;
+  function generateRandomNumber(
+    uint256 tokenId,
+    uint256 modulus,
+    string memory salt,
+    address recipient
+  ) internal view returns (uint256) {
+    return uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, tokenId, salt, recipient))) % modulus;
+  }
+
+  function generateAttribute(
+    string[] storage attributeList,
+    uint256 mean,
+    uint256 stddev,
+    uint256 tokenId,
+    string memory salt,
+    address recipient
+  ) internal view returns (string memory) {
+    uint256 randomNumber = generateRandomNumber(tokenId, 100, salt, recipient);
+    uint256 index = ((inverseCDF(randomNumber) * stddev) / 100) + mean;
+    index = index % attributeList.length;
+    return attributeList[index];
   }
 
   function inverseCDF(uint256 randomNumber) internal view returns (uint256) {
@@ -128,18 +147,6 @@ contract MetadataFactory is IMetadataFactory {
       }
     }
     return cdf.length - 1;
-  }
-
-  function generateAttribute(
-    string[] storage attributeList,
-    uint256 mean,
-    uint256 stddev,
-    uint256 tokenId
-  ) internal view returns (string memory) {
-    uint256 randomNumber = generateRandomNumber(tokenId, 100);
-    uint256 index = ((inverseCDF(randomNumber) * stddev) / 100) + mean;
-    index = index % attributeList.length;
-    return attributeList[index];
   }
 
   function _encode3bytes(
@@ -208,31 +215,31 @@ contract MetadataFactory is IMetadataFactory {
     return string(result);
   }
 
-  function getAttributes(uint256 tokenId) internal view returns (Attributes memory) {
+  function getAttributes(uint256 tokenId, address recipient) internal view returns (Attributes memory) {
     Attributes memory attributes = Attributes(
-      generateAttribute(colors, 2, 1, tokenId),
-      generateAttribute(patterns, 1, 1, tokenId),
-      generateAttribute(eyeColors, 2, 1, tokenId),
-      generateAttribute(accessories, 1, 1, tokenId),
-      generateAttribute(energyLevels, 1, 1, tokenId)
+      generateAttribute(colors, 2, 1, tokenId, "color", recipient),
+      generateAttribute(patterns, 1, 1, tokenId, "pattern", recipient),
+      generateAttribute(eyeColors, 2, 1, tokenId, "eyeColor", recipient),
+      generateAttribute(accessories, 1, 1, tokenId, "accessory", recipient),
+      generateAttribute(energyLevels, 1, 1, tokenId, "energyLevel", recipient)
     );
 
     return attributes;
   }
 
-  function getStats(uint256 tokenId) internal view returns (Stats memory) {
+  function getStats(uint256 tokenId, address recipient) internal view returns (Stats memory) {
     Stats memory stats = Stats(
-      (generateRandomNumber(tokenId, 100) % 21) + 40,
-      (generateRandomNumber(tokenId, 100) % 21) + 40,
-      (generateRandomNumber(tokenId, 100) % 21) + 40
+      (generateRandomNumber(tokenId, 100, "strength", recipient) % 21) + 40,
+      (generateRandomNumber(tokenId, 100, "agility", recipient) % 21) + 40,
+      (generateRandomNumber(tokenId, 100, "intelligence", recipient) % 21) + 40
     );
 
     return stats;
   }
 
-  function createTokenMetadata(uint256 tokenId) external view returns (string memory, TokenMetadata memory metadata) {
-    Attributes memory attributes = getAttributes(tokenId);
-    Stats memory stats = getStats(tokenId);
+  function createTokenMetadata(uint256 tokenId, address recipient) external view returns (string memory, TokenMetadata memory metadata) {
+    Attributes memory attributes = getAttributes(tokenId, recipient);
+    Stats memory stats = getStats(tokenId, recipient);
 
     string memory _tokenURI = _createTokenMetadata(attributes, stats);
 
