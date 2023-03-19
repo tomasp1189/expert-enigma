@@ -73,7 +73,7 @@ contract SlothNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     return id;
   }
 
-  function mintRandomSloth(address to) public onlyOwner {
+  function mintRandomSloth(address to) public {
     _tokenIds.increment();
     uint256 tokenId = _tokenIds.current();
 
