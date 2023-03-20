@@ -1,22 +1,25 @@
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Typography, Box, Card, CardMedia, CircularProgress, alpha } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import { useGetUserNFTs } from "../hooks/useGetUserNFTs";
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Typography, Box, Card, CardMedia, CircularProgress, alpha, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Key, SetStateAction, useContext, useEffect, useState } from "react";
+import { SlothNFT } from "../constants/types";
+import { useGetNFTsByAddress } from "../hooks/useGetNFTsByAddress";
 import { Store } from "../providers/Store";
 export const NFTsModal : React.FC = () => {
     const [open, setOpen] = useState(false);
     const { userStore } = useContext(Store);
-    const { setSelectedTokenId, setShowDetailsModal } = userStore;
+    const { setSelectedTokenId, setShowDetailsModal, allNFTs, userNFTs, setUserNFTs } = userStore;
     const [loading, setLoading] = useState(true);
     const address = useContext(Store).userStore.address;
-    const NFTs = useGetUserNFTs(address);
+    setUserNFTs(useGetNFTsByAddress(address));
+    const [viewMode, setViewMode] = useState('all');
+    const displayedNFTs = viewMode === 'owned' ? userNFTs : allNFTs;
 
     useEffect(() => {
-        if (NFTs.length > 0) {
+        if (displayedNFTs.length > 0) {
             setLoading(false);
         } else {
             setLoading(true);
         }
-    }, [NFTs]);
+    }, [displayedNFTs]);
 
     const handleOpen = () => {
         setOpen(true);
@@ -24,17 +27,29 @@ export const NFTsModal : React.FC = () => {
     const handleClose = () => {
         setOpen(false);
     };
+    const handleViewModeChange = (event: any, newViewMode: SetStateAction<string> | null) => {
+      if (newViewMode !== null) {
+        setViewMode(newViewMode);
+      }
+    };
     
     return (
         <>
         <Button variant="contained" color="primary" onClick={handleOpen}>
-            View NFTs
+            Slothédex
         </Button>
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Your NFTs</DialogTitle>
+            <DialogTitle>Slothédex</DialogTitle>
             <DialogContent >
-            {
-  loading ? (
+            <ToggleButtonGroup
+                value={viewMode}
+                exclusive
+                onChange={handleViewModeChange}
+                sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
+                          <ToggleButton value="all">All NFTs</ToggleButton>
+                          <ToggleButton value="owned">Owned NFTs</ToggleButton>
+            </ToggleButtonGroup>
+{ loading ? (
     <Box
       sx={{
         display: 'flex',
@@ -45,11 +60,11 @@ export const NFTsModal : React.FC = () => {
     >
       <CircularProgress />
     </Box>
-  ) : NFTs && (
+  ) : displayedNFTs && (
     <Grid container spacing={2} sx={{
       pt: 2,
     }}>
-      {NFTs.map((nft, index) => (
+      {displayedNFTs.map((nft: SlothNFT, index: Key) => (
         <Grid item key={index} xs={12} sm={6} md={4}>
           <Card onClick={() => {setSelectedTokenId(nft.tokenId); handleClose(); setShowDetailsModal(true);}}
   sx={{

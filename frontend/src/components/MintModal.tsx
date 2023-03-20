@@ -16,13 +16,13 @@ export const MintModal : React.FC = () => {
     return (
         <>
         <Button variant="contained" color="primary" onClick={handleOpen}>
-            Mint NFT
+            Mint Sloth
         </Button>
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Mint NFT</DialogTitle>
+            <DialogTitle>Mint Sloth</DialogTitle>
             <DialogContent>
             <DialogContentText>
-                Buy a Sloth NFT for 0.01 ETH
+                Get a Sloth NFT for 0.01 ETH
             </DialogContentText>
             <img src="sloths.png" width='100%' height='100%'/>
     

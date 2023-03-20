@@ -14,17 +14,18 @@ import {
     CircularProgress,
   } from '@mui/material';
   import { useContext, useEffect, useState } from 'react';
-  import { useGetNFTByTokenID } from '../hooks/useGetNFTByTokenId';
+  import { useGetNFTByTokenId } from '../hooks/useGetNFTByTokenId';
 import { Store } from '../providers/Store';
   
   export const NFTDetailsModal: React.FC = () => {
     const {userStore} = useContext(Store);
     const {selectedTokenId, showDetailsModal, setShowDetailsModal} = userStore;
-    const [viewTokenId, setViewTokenId] = useState<number>(selectedTokenId || 1);
-    const NFT = useGetNFTByTokenID(viewTokenId);
+    const [viewTokenId, setViewTokenId] = useState<number>(selectedTokenId || null);
+    const NFT = useGetNFTByTokenId(viewTokenId);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+      selectedTokenId &&
         setViewTokenId(selectedTokenId);
     }, [selectedTokenId]);
     
@@ -51,12 +52,12 @@ import { Store } from '../providers/Store';
     return (
       <>
         <Button variant="contained" color="primary" onClick={handleOpen}>
-          View NFT Details
+        Sloth Search
         </Button>
         <Dialog open={showDetailsModal} onClose={handleClose}>
-          <DialogTitle>NFT Details</DialogTitle>
+          <DialogTitle>Sloth Finder</DialogTitle>
           <DialogContent>
-            { loading ? (
+            { loading && viewTokenId ? (
     <Box
       sx={{
         display: 'flex',
