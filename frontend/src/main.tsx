@@ -52,7 +52,6 @@ const buildBearChain: Chain = {
         url: 'https://explorer.buildbear.io/Boring_Rugor_Nass_90b2108e'
       },
   },
-
 };
 
 
@@ -62,7 +61,7 @@ const { chains, provider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'My RainbowKit App',
+  appName: 'Slothagotchi',
   chains
 });
 

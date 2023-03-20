@@ -1,13 +1,9 @@
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
-import { useContext, useState } from "react";
-import { Store } from "../providers/Store";
+import { useState } from "react";
 import { MintButton } from "./MintButton";
-import Image from "mui-image";
 
 export const MintModal : React.FC = () => {
-    const [mintingData, setMintingData] = useState(null);
     const [open, setOpen] = useState(false);
-    const { userStore } = useContext(Store);
     
     const handleOpen = () => {
         setOpen(true);

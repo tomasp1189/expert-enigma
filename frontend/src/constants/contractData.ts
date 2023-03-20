@@ -998,7 +998,7 @@ export const contractData: ContractData = {
     },
 
     sloth_farming:  {
-        address: "0x13B8580c23E96B932D8814A397D05DC1ee53e8f9",
+        address: "0x6751De236f71aED7fb99C57Fa633D19Ae975eE7c",
         abi: [
             {
             "inputs": [
