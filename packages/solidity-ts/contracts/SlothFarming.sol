@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./interfaces/ISlothToken.sol";
 import "./SlothNFT.sol";
 import "./MetadataStorage.sol";
 import "./SlothNFTStaking.sol";
 
 contract SlothFarming is SlothNFTStaking {
-  IERC20 public resourceToken;
+  ISlothToken public resourceToken;
   MetadataStorage public metadataStorage;
 
   mapping(uint256 => uint256) public lastFarmed;
@@ -17,10 +17,12 @@ contract SlothFarming is SlothNFTStaking {
     address _slothNFT,
     address _metadataStorage
   ) SlothNFTStaking(_slothNFT) {
-    resourceToken = IERC20(_resourceToken);
+    resourceToken = ISlothToken(_resourceToken);
     metadataStorage = MetadataStorage(_metadataStorage);
   }
 
+  // Calculate the farming rate based on the stats of the NFT
+  // include stat in the function signature to choose what to farm.
   function farm(uint256 tokenId) external {
     require(slothNFT.ownerOf(tokenId) == msg.sender, "Only the NFT owner can farm");
 
@@ -42,7 +44,7 @@ contract SlothFarming is SlothNFTStaking {
     uint256 timeSinceLastFarm = block.timestamp - lastFarmed[tokenId];
 
     uint256 resourceAmount = farmingRate * timeSinceLastFarm;
-    resourceToken.transfer(msg.sender, resourceAmount);
+    resourceToken.mint(msg.sender, resourceAmount);
     lastFarmed[tokenId] = block.timestamp;
   }
 
