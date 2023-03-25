@@ -52,4 +52,9 @@ contract SlothFarming is SlothNFTStaking {
     // Implement your custom farming rate calculation based on the NFT's attributes
     return stats.intelligence + stats.strength;
   }
+
+  // Cap the max farming prize within a time window.abi
+  // Arena - keeps track of wins and losses. Wins give you higher stats. Losses might make you loose money.
+  // Skill shop - nope
+  // leaderboard
 }
