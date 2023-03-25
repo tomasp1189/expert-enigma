@@ -136,7 +136,7 @@ export const MainPage: FC = () => {
         content: (
           <GenericContract
             contractName="SlothFarming"
-            contract={slothNFT}
+            contract={slothFarming}
             mainnetAdaptor={scaffoldAppProviders.mainnetAdaptor}
             blockExplorer={scaffoldAppProviders.currentTargetNetwork.blockExplorer}></GenericContract>
         ),

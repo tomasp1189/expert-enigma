@@ -67,13 +67,20 @@ contract SlothNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     _tokenIds.increment();
 
     uint256 id = _tokenIds.current();
-    _mint(to, id);
+
+    // You'll need to implement a function to create the tokenURI based on the attributes
+    // string memory _tokenURI;
+    TokenMetadata memory _tokenMetadata;
+    (, _tokenMetadata) = metadataFactory.createTokenMetadata(id, to);
+
+    _safeMint(to, id);
+    metadataStorage.setTokenMetadata(id, _tokenMetadata);
     _setTokenURI(id, _tokenURI);
 
     return id;
   }
 
-  function mintRandomSloth(address to) public {
+  function mintRandomSloth(address to) public returns (uint256) {
     _tokenIds.increment();
     uint256 tokenId = _tokenIds.current();
 
@@ -85,5 +92,6 @@ contract SlothNFT is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     _safeMint(to, tokenId);
     metadataStorage.setTokenMetadata(tokenId, _tokenMetadata);
     _setTokenURI(tokenId, _tokenURI);
+    return tokenId;
   }
 }

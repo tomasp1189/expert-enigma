@@ -16,7 +16,7 @@ const func: DeployFunction = async (hre: THardhatRuntimeEnvironmentExtended) => 
   await deploy('SlothNFT', {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
-    args: [MetadataStorage.address, MetadataFactory.address],
+    args: [MetadataFactory.address, MetadataStorage.address],
     log: true,
   });
 };
