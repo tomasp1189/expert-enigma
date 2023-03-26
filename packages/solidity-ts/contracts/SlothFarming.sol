@@ -63,7 +63,7 @@ contract SlothFarming is SlothNFTStaking {
     return stats.intelligence.add(stats.strength);
   }
 
-  // Cap the max farming prize within a time window.abi
+  // Cap the max farming prize within a time window.abi ✅
   // Arena - keeps track of wins and losses. Wins give you higher stats. Losses might make you loose money.
   // Skill shop - nope
   // leaderboard
