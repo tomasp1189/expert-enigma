@@ -8,6 +8,8 @@ import "./SlothNFTStaking.sol";
 contract SlothArena is SlothNFTStaking {
   MetadataStorage public metadataStorage;
 
+  uint256[] private waitingQueue;
+
   mapping(uint256 => bool) public isInArena;
 
   event EnteredArena(uint256 indexed tokenId);
@@ -31,7 +33,33 @@ contract SlothArena is SlothNFTStaking {
     emit LeftArena(tokenId);
   }
 
-  function battle(uint256 tokenId1, uint256 tokenId2) external {
+  function isInQueue(uint256 tokenId) public view returns (bool) {
+    for (uint256 i = 0; i < waitingQueue.length; i++) {
+      if (waitingQueue[i] == tokenId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function enterBattle(uint256 tokenId) external {
+    // Check if there's an opponent waiting in the queue
+    if (waitingQueue.length > 0) {
+      uint256 opponentTokenId = waitingQueue[0];
+
+      // Remove the opponent from the queue
+      waitingQueue[0] = waitingQueue[waitingQueue.length - 1];
+      waitingQueue.pop();
+
+      // Start the battle
+      _battle(tokenId, opponentTokenId);
+    } else {
+      // Add the user's NFT to the waiting queue
+      waitingQueue.push(tokenId);
+    }
+  }
+
+  function _battle(uint256 tokenId1, uint256 tokenId2) private {
     require(isInArena[tokenId1], "Token 1 must be in the arena to participate");
     require(isInArena[tokenId2], "Token 2 must be in the arena to participate");
 
