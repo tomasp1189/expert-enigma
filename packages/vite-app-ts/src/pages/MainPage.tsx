@@ -85,6 +85,7 @@ export const MainPage: FC = () => {
   const slothFarming = useAppContracts('SlothFarming', ethersAppContext.chainId);
   const slothNFT = useAppContracts('SlothNFT', ethersAppContext.chainId);
   const slothToken = useAppContracts('SlothToken', ethersAppContext.chainId);
+  const slothArena = useAppContracts('SlothArena', ethersAppContext.chainId);
 
   // keep track of a variable from the contract in the local React state:
   // const [stakers, update] = useContractReader(
@@ -137,6 +138,16 @@ export const MainPage: FC = () => {
           <GenericContract
             contractName="SlothFarming"
             contract={slothFarming}
+            mainnetAdaptor={scaffoldAppProviders.mainnetAdaptor}
+            blockExplorer={scaffoldAppProviders.currentTargetNetwork.blockExplorer}></GenericContract>
+        ),
+      },
+      {
+        name: 'SlothArena',
+        content: (
+          <GenericContract
+            contractName="SlothArena"
+            contract={slothArena}
             mainnetAdaptor={scaffoldAppProviders.mainnetAdaptor}
             blockExplorer={scaffoldAppProviders.currentTargetNetwork.blockExplorer}></GenericContract>
         ),

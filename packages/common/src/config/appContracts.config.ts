@@ -44,6 +44,18 @@ export const appContractsConfig = () => {
               toolkitContracts.SlothFarming__factory,
               foundryDeployedContractsJson
             ),
+      SlothArena:
+        scaffoldConfig.build.solidityToolkit === 'hardhat'
+          ? createConnectorForHardhatContract(
+              'SlothArena',
+              toolkitContracts.SlothArena__factory,
+              hardhatDeployedContractsJson
+            )
+          : createConnectorForFoundryContract(
+              'SlothArena',
+              toolkitContracts.SlothArena__factory,
+              foundryDeployedContractsJson
+            ),
       SlothToken:
         scaffoldConfig.build.solidityToolkit === 'hardhat'
           ? createConnectorForHardhatContract(

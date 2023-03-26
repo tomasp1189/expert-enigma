@@ -40,8 +40,6 @@ contract SlothNFTStaking is SenderOverride {
   }
 
   function _unstake(uint256 tokenId) internal {
-    console.log("msg.sender", _msgSender());
-    console.log("stakers[tokenId]", stakers[tokenId]);
     if (_msgSender() != address(this)) {
       require(stakers[tokenId] == _msgSender(), "Only the owner can unstake the NFT");
     }
