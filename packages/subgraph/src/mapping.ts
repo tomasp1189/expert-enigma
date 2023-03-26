@@ -1,11 +1,7 @@
-import { BigInt, Address } from "@graphprotocol/graph-ts";
-import {
-  YourContract,
-  SetPurpose,
-} from "../generated/YourContract/YourContract";
-import { Purpose, Sender } from "../generated/schema";
+import { BigInt, Address } from '@graphprotocol/graph-ts';
+import { Purpose, Sender } from '../generated/schema';
 
-export function handleSetPurpose(event: SetPurpose): void {
+export function handleSetPurpose(event: any): void {
   let senderString = event.params.sender.toHexString();
 
   let sender = Sender.load(senderString);
@@ -19,9 +15,7 @@ export function handleSetPurpose(event: SetPurpose): void {
     sender.purposeCount = sender.purposeCount.plus(BigInt.fromI32(1));
   }
 
-  let purpose = new Purpose(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  );
+  let purpose = new Purpose(event.transaction.hash.toHex() + '-' + event.logIndex.toString());
 
   purpose.purpose = event.params.purpose;
   purpose.sender = senderString;

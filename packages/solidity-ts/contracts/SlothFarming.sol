@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
 import "./interfaces/ISlothToken.sol";
 import "./SlothNFT.sol";
 import "./MetadataStorage.sol";
 import "./SlothNFTStaking.sol";
 
+import "hardhat/console.sol";
+
 contract SlothFarming is SlothNFTStaking {
+  using SafeMath for uint256;
   ISlothToken public resourceToken;
   MetadataStorage public metadataStorage;
 
@@ -42,15 +47,20 @@ contract SlothFarming is SlothNFTStaking {
     Stats memory stats = metadataStorage.getTokenStats(tokenId);
     uint256 farmingRate = calculateFarmingRate(stats);
     uint256 timeSinceLastFarm = block.timestamp - lastFarmed[tokenId];
+    // limit the max farming rate
+    if (timeSinceLastFarm > 1 days) {
+      timeSinceLastFarm = 1 days;
+    }
 
-    uint256 resourceAmount = farmingRate * timeSinceLastFarm;
+    uint256 resourceAmount = farmingRate.mul(timeSinceLastFarm);
     resourceToken.mint(msg.sender, resourceAmount);
     lastFarmed[tokenId] = block.timestamp;
   }
 
   function calculateFarmingRate(Stats memory stats) internal pure returns (uint256) {
     // Implement your custom farming rate calculation based on the NFT's attributes
-    return stats.intelligence + stats.strength;
+
+    return stats.intelligence.add(stats.strength);
   }
 
   // Cap the max farming prize within a time window.abi

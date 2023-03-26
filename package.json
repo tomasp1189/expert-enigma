@@ -32,6 +32,7 @@
     "contracts:build": "yarn workspace @scaffold-eth/common contracts:build",
     "contracts:clean": "yarn workspace @scaffold-eth/solidity clean && yarn workspace @scaffold-eth/common clean",
     "contracts:watch": "yarn scaffold watch",
+    "contracts:test": "yarn workspace @scaffold-eth/solidity test:hardhat",
     "@🔖🔖🔖🔖🔖 toolkit commands 🔖🔖🔖🔖🔖 ": "echo 📖 scripts & commands",
     "hardhat": "yarn workspace @scaffold-eth/solidity hardhat",
     "forge": "yarn workspace @scaffold-eth/solidity exec forge",

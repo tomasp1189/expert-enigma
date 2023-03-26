@@ -41,15 +41,15 @@ describe('🚩 Challenge 0: 🎟 Simple NFT Example 🤓', function () {
         console.log('\t', ' ⚖️ Starting balance: ', startingBalance.toNumber());
 
         console.log('\t', ' 🔨 Minting...');
-        const mintResult = await slothNFTContract.mintRandomSloth(user1.address);
+        const mintResult = await slothNFTContract.mintItem(user1.address, 'https://sloth.com/1');
         console.log('\t', ' 🏷  mint tx: ', mintResult.hash);
 
         console.log('\t', ' ⏳ Waiting for confirmation...');
         const txResult = await mintResult.wait(1);
         expect(txResult.status).to.equal(1);
 
-        console.log('\t', 'tokenURI:', await slothNFTContract.tokenURI(1));
-        console.log('\t', 'tokenMetadata:', await slothNFTContract.tokenMetadata(1));
+        // console.log('\t', 'tokenURI:', await slothNFTContract.tokenURI(1));
+        // console.log('\t', 'tokenMetadata:', await slothNFTContract.tokenMetadata(1));
 
         console.log('\t', ' 🔎 Checking new balance: ', startingBalance.toNumber());
         expect(await slothNFTContract.balanceOf(user1.address)).to.equal(startingBalance.add(1));
